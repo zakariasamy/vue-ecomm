@@ -6,7 +6,8 @@ window.$= window.jQuery = jQuery;
 import 'popper.js';
 import 'bootstrap';
 import './assets/app.scss';
-
+import {fb}   from './firebase'
+require('firebase/firestore')
 Vue.config.productionTip = false;
 
 Vue.component('Navbar',require('./components/Navbar.vue').default);
@@ -14,7 +15,12 @@ Vue.component('Header',require('./components/Header.vue').default);
 Vue.component('Login',require('./components/Login.vue').default);
 Vue.component('Products',require('./sections/Products.vue').default);
 
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount("#app");
+
+fb.auth().onAuthStateChanged(function(user) {
+  new Vue({
+    router,
+    render: h => h(App)
+  }).$mount("#app");
+
+});
+

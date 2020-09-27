@@ -1,7 +1,7 @@
 <template>
   <div class="login">
         <!-- Modal -->
-        <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginTitle" aria-hidden="true">
+        <div class="modal" id="login" tabindex="-1" role="dialog" aria-labelledby="loginTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
@@ -72,11 +72,9 @@
 </template>
 
 <script>
+import {fb} from '../firebase';
 export default {
   name: "Login",
-  props: {
-    msg: String
-  },
   data(){
       return {
           name:null,
@@ -84,10 +82,47 @@ export default {
           password:null
       }
   },
-  methods:{
-      login(){}
-  }
-};
+  methods:{ 
+    register(){
+        fb.auth().createUserWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+            this.$router.replace('admin');
+        })
+        .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // [START_EXCLUDE]
+            if (errorCode == 'auth/weak-password') {
+                alert('The password is too weak.');
+            } else {
+                alert(errorMessage);
+            }
+            console.log(error);
+            // [END_EXCLUDE]
+        });
+        // [END createwithemail]
+    }
+    ,
+    login(){
+        fb.auth().signInWithEmailAndPassword(this.email, this.password)
+            .then((user) =>{
+                this.$router.replace('/admin')
+            })
+            .catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+        } else {
+            alert(errorMessage);
+        }
+        console.log(error);
+        });
+  },
+}
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

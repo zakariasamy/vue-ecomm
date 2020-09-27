@@ -102,7 +102,9 @@
 
 <script>
 // @ is an alias to /src
-//import {fb} from '../firebase';
+import {fb} from '../firebase';
+
+
 
 export default {
   name: "admin",
@@ -117,12 +119,22 @@ export default {
         $(".page-wrapper").toggleClass("toggled");
       },
       logout(){
-
+          fb.auth().signOut()
+          .then(() => {
+              this.$router.replace('/');
+          })
+          .catch((err) =>{
+              console.log(err);
+          });
       }
   },
 
   created(){
-
+    let user = fb.auth().currentUser;
+    $('#login').modal('hide');
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+    this.email = user.email;
   }
 };
 </script>
