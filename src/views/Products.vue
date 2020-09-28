@@ -49,7 +49,7 @@
                         <td>
 
                           <button class="btn btn-primary" @click="editProduct(product)">Edit</button>
-                          <button class="btn btn-danger" @click="deleteProduct(product)">Delete</button>
+                          <button class="btn btn-danger" @click="deleteProduct(product.id)">Delete</button>
                         </td>
 
                       </tr>
@@ -106,6 +106,50 @@
           </div>
         </div>
       </div>
+      <!-- Modal edit-->
+      <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editLabel">Edit Product</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                  <!-- main product -->
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" placeholder="Product Name" v-model="product.name" class="form-control">
+                    </div>
+
+
+                  </div>
+                  <!-- product sidebar -->
+                  <div class="col-md-4">
+                    <h4 class="display-6">Product Details</h4>
+                    <hr>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="Product price" v-model="product.price" class="form-control">
+                    </div>
+
+                  </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button @click="updateProduct()" type="button" class="btn btn-primary" >Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
     
@@ -126,6 +170,7 @@ export default {
           name:null,
           //description:null,
           price:null,
+          id:null
           //tags:[],
           //images:[]
         }
@@ -136,6 +181,15 @@ export default {
   },
 
   methods:{
+    watcher(){
+      db.collection("products").onSnapshot((querySnapshot)=> {
+        this.products=[]
+        querySnapshot.forEach((doc)=> {
+            this.products.push(doc);
+        });
+        console.log("Current cities in CA: ", cities.join(", "));
+      });
+    },
     readData(){
       db.collection("products").get().then((querySnapshot)=> {
       querySnapshot.forEach((doc)=> {
@@ -210,72 +264,58 @@ export default {
         this.reset();
         $('#product').modal('show');
     },
-    updateProduct(){
-        this.$firestore.products.doc(this.product.id).update(this.product);
-          Toast.fire({
-            type: 'success',
-            title: 'Updated  successfully'
-          })
-
-           $('#product').modal('hide');
+    updateProduct(id){
+      db.collection("products").doc(this.product.id).update({
+          "price": this.product.price,
+          "name":this.product.name,
+      })
+      .then(()=> {
+        this.watcher();
+        $('#edit').modal('hide');
+          console.log("Document successfully updated!");
+      })
+      .catch(function(error) {
+          // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+      });
     },
 
     editProduct(product){
       this.modal = 'edit';
-      this.product = product;
-      $('#product').modal('show');
+      //this.product = product;
+      this.product.name=product.data().name
+      this.product.price=product.data().price
+      this.product.id=product.id
+      $('#edit').modal('show');
     },
 
 
-    deleteProduct(doc){
+    deleteProduct(id){
 
-
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.value) {
-
-          this.$firestore.products.doc(doc.id).delete()
-
-          Toast.fire({
-            type: 'success',
-            title: 'Deleted  successfully'
-          })
-
-        
-        }
-      })
-
-
+db.collection("products").doc(id).delete().then(()=> {
+    this.watcher()
+    console.log("Document successfully deleted!");
+}).catch(function(error) {
+    console.error("Error removing document: ", error);
+});
         
     },
 
     addProduct(){
-      console.log('aaaaaaaaaaaaaa')
-      console.log({
-        'name':this.product.name,
-        'price':this.product.price
-      })
       db.collection("products").add({
         'name':this.product.name,
         'price':this.product.price
       })
       .then((docRef)=> {
+        this.watcher()
           console.log("Document written with ID: ", docRef.id);
           this.reset()
-          this.readData()
       })
       .catch(function(error) {
           console.error("Error adding document: ", error);
       });
 
-      //$('#product').modal('hide');
+      $('#product').modal('hide');
     }
 
   
