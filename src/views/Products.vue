@@ -39,11 +39,11 @@
                   <tbody>
                       <tr v-for="(product,index) in products" v-bind:key="index">
                         <td>
-                          {{product.data().name}}
+                          {{product.name}}
                         </td>
 
                         <td>
-                          {{product.data().price}}
+                          {{product.price}}
                         </td>
 
                         <td>
@@ -165,7 +165,6 @@ export default {
 
   data(){
     return {
-        products: [],
         product: {
           name:null,
           //description:null,
@@ -179,24 +178,15 @@ export default {
         //tag: null
     }
   },
+  firestore(){
+      return {
+        products: db.collection('products'), // Products array will be created auto with the data
+      }
+  },
+  methods: {
 
-  methods:{
-    watcher(){
-      db.collection("products").onSnapshot((querySnapshot)=> {
-        this.products=[]
-        querySnapshot.forEach((doc)=> {
-            this.products.push(doc);
-        });
-        console.log("Current cities in CA: ", cities.join(", "));
-      });
-    },
     readData(){
-      db.collection("products").get().then((querySnapshot)=> {
-      querySnapshot.forEach((doc)=> {
-          // doc.data() is never undefined for query doc snapshots
-          this.products.push(doc)
-      });
-    });
+
     },
 
     deleteImage(img,index){
@@ -249,82 +239,32 @@ export default {
 
     },
 
-    reset(){
-      this.product = {
-          name:null,
-          //description:null,
-          price:null,
-          //tags:[],
-         // images:[]
-      }
-    },
 
     addNew(){
         this.modal = 'new';
-        this.reset();
         $('#product').modal('show');
     },
     updateProduct(id){
-      db.collection("products").doc(this.product.id).update({
-          "price": this.product.price,
-          "name":this.product.name,
-      })
-      .then(()=> {
-        this.watcher();
-        $('#edit').modal('hide');
-          console.log("Document successfully updated!");
-      })
-      .catch(function(error) {
-          // The document probably doesn't exist.
-          console.error("Error updating document: ", error);
-      });
+
     },
 
     editProduct(product){
-      this.modal = 'edit';
-      //this.product = product;
-      this.product.name=product.data().name
-      this.product.price=product.data().price
-      this.product.id=product.id
-      $('#edit').modal('show');
+
     },
 
 
     deleteProduct(id){
 
-db.collection("products").doc(id).delete().then(()=> {
-    this.watcher()
-    console.log("Document successfully deleted!");
-}).catch(function(error) {
-    console.error("Error removing document: ", error);
-});
+
         
     },
 
     addProduct(){
-      db.collection("products").add({
-        'name':this.product.name,
-        'price':this.product.price
-      })
-      .then((docRef)=> {
-        this.watcher()
-          console.log("Document written with ID: ", docRef.id);
-          this.reset()
-      })
-      .catch(function(error) {
-          console.error("Error adding document: ", error);
-      });
-
-      $('#product').modal('hide');
+        this.$firestore.products.add(this.product)
+        $('#product').modal('hide');
     }
-
-  
-  },
-  created(){
-    this.readData()
-
-  }
-};
+}
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

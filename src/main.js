@@ -7,7 +7,15 @@ import 'popper.js';
 import 'bootstrap';
 import './assets/app.scss';
 import {fb}   from './firebase'
+import VueFirestore from 'vue-firestore'
 require('firebase/firestore')
+
+
+Vue.use(VueFirestore, {
+  key: 'id',         // the name of the property. Default is '.key'.
+  enumerable: true  //  whether it is enumerable or not. Default is true.
+})
+
 Vue.config.productionTip = false;
 
 Vue.component('Navbar',require('./components/Navbar.vue').default);
