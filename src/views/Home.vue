@@ -3,8 +3,8 @@
   <div class="home">
       <Navbar></Navbar>
       <Header></Header>
-      <Products></Products>
-      <products-list></products-list>
+      <Product-list></Product-list>
+      <Products-list></Products-list>
 
       <div class="container h-100">
         <div class="row p-5 h-100 justify-content-center align-items-center">

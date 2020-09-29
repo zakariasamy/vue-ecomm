@@ -283,7 +283,7 @@ export default {
     editProduct(product){
       this.modal = 'edit';
       this.product=product
-      this.tags=product.tags
+      this.tags=product.tags.toString()
       $('#product').modal('show');
     },
 

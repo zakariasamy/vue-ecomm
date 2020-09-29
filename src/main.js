@@ -32,6 +32,7 @@ Vue.component('Navbar',require('./components/Navbar.vue').default);
 Vue.component('Header',require('./components/Header.vue').default);
 Vue.component('Login',require('./components/Login.vue').default);
 Vue.component('Products',require('./sections/Products.vue').default);
+Vue.component('Products-list',require('./sections/ProductsList.vue').default);
 
 
 fb.auth().onAuthStateChanged(function(user) {

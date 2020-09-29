@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import {fb} from '../firebase';
+import {db,fb} from '../firebase';
 export default {
   name: "Login",
   data(){
@@ -86,6 +86,16 @@ export default {
     register(){
         fb.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then((user) => {
+            $('#login').modal('hide')
+            db.collection("profiles").doc(user.user.uid).set({
+                name: this.name
+            })
+            .then(function() {
+                console.log("Document successfully written!");
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
             this.$router.replace('admin');
         })
         .catch(function(error) {
