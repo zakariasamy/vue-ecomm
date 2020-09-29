@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="form-group">
-                      <input type="text" placeholder="Product tags" v-model="tags" class="form-control">
+                      <input type="text" @keyup="addTags('show')" placeholder="Product tags" v-model="tags" class="form-control">
                       
                       <div  class="d-flex">
                         <p v-for="(tag,index) in product.tags" v-bind:key="index">
@@ -112,7 +112,7 @@
                     </div>
 
                     <div class="form-group d-flex">
-                      <div class="p-1" v-for="(image, index) in product.images" v-bind:key="index">
+                      <div class="p-1" v-for="(image, index) in product.images" :key="index">
                           <div class="img-wrapp">
                               <img :src="image" alt="" width="80px">
                               <span class="delete-img" @click="deleteImage(image,index)">X</span>
@@ -192,13 +192,23 @@ export default {
 
     },
 
-    addTags(){
-      if(this.tags != null)
-        this.product.tags=this.tags.split(/\s*[\s,.\-\/]+\s*/)  // Get tags in array using regex
-      this.tags=null
+    addTags($mode='end'){
+      if($mode=='end'){
+        if(this.tags != null && this.tags!= ""){
+          this.product.tags=this.tags.split(/\s*[\s,.\-\/]+\s*/)  // Get tags in array using regex
+        }
+        else
+          this.product.tags=[]
+        this.tags=null
+      }
+      else{
+        if(this.tags != null)
+          this.product.tags=this.tags.split(/\s*[\s,.\-\/]+\s*/)  // Get tags in array using regex
+      }
     },
     uploadImage(e){
-
+      if(!this.product.hasOwnProperty('images'))
+        this.product.images=[]
       if(e.target.files[0]){
         
           let file = e.target.files[0];
@@ -236,7 +246,7 @@ export default {
           tags:[],
           images:[]
       }
-      this.tag=""
+      this.tags=""
     },
     addNew(){
         this.modal = 'new';
@@ -257,10 +267,23 @@ export default {
 
       $('#product').modal('hide');
     },
-
+    equals(product){
+     // if(product.name)
+     //   this.product.name=product.name;
+     // if(product.description)
+      //  this.product.description=product.description;
+      //if(product.price)
+       // this.product.price=product.price;
+      //if(product.tags)
+        //this.product.tags=product.tags;
+      if(product.images)
+        this.product.images=product.images;
+    }
+      ,
     editProduct(product){
       this.modal = 'edit';
-      this.product = product;
+      this.product=product
+      this.tags=product.tags
       $('#product').modal('show');
     },
 
