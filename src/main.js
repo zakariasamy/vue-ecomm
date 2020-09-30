@@ -11,6 +11,9 @@ import VueFirestore from 'vue-firestore'
 //require('firebase/firestore')
 import Swal from 'sweetalert2'
 window.Swal = Swal;
+import Vue2Filters from 'vue2-filters'
+ 
+Vue.use(Vue2Filters)
 
 const Toast = Swal.mixin({
   toast: true,
