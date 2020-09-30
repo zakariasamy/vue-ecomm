@@ -6,11 +6,13 @@
         <div class="row">
             
             <div class="col-md-4" v-for="(product,key) in products" :key="key">
+                
                 <div class="card product-item">
-
-                      <carousel :perPage="1">
+                    
+                      <carousel :perPage="1" :paginationEnabled="false" minSwipeDistance="2" :speed="1">
+                        
                         <slide v-for="(image, index) in product.images" :key="index">
-                              <img :src="image" class="card-img-top" alt="..." width="250px">
+                              <img :src="image" class="card-img-top" alt="..." width="250px" height="300px">
                         </slide>
                       </carousel>
               
@@ -21,12 +23,12 @@
 
                         </div>
                           
-                          <add-to-cart 
+                          <!-- <add-to-cart 
                               :image="getImage(product.images)"
                               :p-id="product.id"
                               :price="product.price"
                               :name="product.name">
-                          </add-to-cart>
+                          </add-to-cart> -->
                       </div>
                   </div>
             </div>
@@ -39,6 +41,7 @@
 
 <script>
 import {db} from '../firebase';
+import { Carousel, Slide } from 'vue-carousel';
 export default {
   name: "Products-list",
   props: {
@@ -49,6 +52,10 @@ data(){
         products: [],
      
     }
+  },
+components: {
+  Carousel,
+  Slide
   },
   methods:{
     getImage(images){
