@@ -12,6 +12,8 @@ import VueFirestore from 'vue-firestore'
 import Swal from 'sweetalert2'
 window.Swal = Swal;
 import Vue2Filters from 'vue2-filters'
+// Vuex
+import store from './store'
  
 Vue.use(Vue2Filters)
 
@@ -36,11 +38,15 @@ Vue.component('Header',require('./components/Header.vue').default);
 Vue.component('Login',require('./components/Login.vue').default);
 Vue.component('Products',require('./sections/Products.vue').default);
 Vue.component('Products-list',require('./sections/ProductsList.vue').default);
+Vue.component('add-to-cart',require('./components/AddToCart.vue').default);
+Vue.component('MiniCart',require('./components/MiniCart.vue').default);
+
 
 
 fb.auth().onAuthStateChanged(function(user) {
   new Vue({
     router,
+    store,
     render: h => h(App)
   }).$mount("#app");
 

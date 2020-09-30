@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "add-to-cart",
+  name: "AddTocart",
   props: {
     name: String,
     price: String,

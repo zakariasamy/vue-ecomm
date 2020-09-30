@@ -13,12 +13,13 @@
               </div>
               <div class="modal-body">
                   <ul>
-                    <li v-for="item in this.$store.state.cart" class="media">
+                    <li v-for="(item,index) in this.$store.state.cart" class="media" :key="item.productId">
+                      
                       <img :src="item.productImage" width="80px" class="align-self-center mr-3" alt="">
                       <div class="media-body">
                         <h5 class="mt-0">{{item.productName}}
-
-                          <span class='float-right' @click="$store.commit('removeFromCart',item)">X</span>
+                          
+                          <span class='float-right' @click="$store.commit('removeFromCart',index)">X</span>
                         </h5>
                         <p class="mt-0">{{item.productPrice | currency}}</p>
                         <p class="mt-0">Quantity : {{item.productQuantity }}</p>

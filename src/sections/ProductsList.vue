@@ -23,12 +23,12 @@
 
                         </div>
                           
-                          <!-- <add-to-cart 
+                           <add-to-cart 
                               :image="getImage(product.images)"
                               :p-id="product.id"
                               :price="product.price"
                               :name="product.name">
-                          </add-to-cart> -->
+                          </add-to-cart>
                       </div>
                   </div>
             </div>
@@ -42,6 +42,7 @@
 <script>
 import {db} from '../firebase';
 import { Carousel, Slide } from 'vue-carousel';
+
 export default {
   name: "Products-list",
   props: {
@@ -55,7 +56,7 @@ data(){
   },
 components: {
   Carousel,
-  Slide
+  Slide,
   },
   methods:{
     getImage(images){

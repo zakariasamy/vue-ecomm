@@ -5,6 +5,7 @@ import Admin from "../views/Admin.vue";
 import Overview from "../views/Overview.vue";
 import Products from "../views/Products.vue";
 import Profile from "../views/Profile.vue";
+import Checkout from "../views/Checkout.vue";
 import {fb} from '../firebase';
 
 Vue.use(VueRouter);
@@ -47,7 +48,12 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
+  },
+  {
+    path: "/checkout",
+    name: "Checkout",
+    component: Checkout
+  },
 ];
 
 const router = new VueRouter({
